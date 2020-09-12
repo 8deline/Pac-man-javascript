@@ -9,7 +9,10 @@ body {
     text-align: center;
 }
 
-/* the main grid that will contain 28 x 28 small grids each grid being 20px by 20px*/
+/* the main grid that will contain 28 x 28 small grids each grid being 20px by 20px
+we do a flex-wrap wrap because we want all the grids to be laid out in different rows
+*/
+
 .grid {
     display: flex;
     flex-wrap: wrap;
@@ -35,7 +38,7 @@ body {
     box-sizing: border-box;
     background-color: rgb(239, 156, 90) ; 
     border-radius: 50%;
-    border: 5px solid black
+    border: 7px solid black
 }
 
 .power-pellets {

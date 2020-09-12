@@ -88,6 +88,7 @@ let width = 28;
 //pacman can move left and right i.e. -1 or +1 step
 //pacman can move up and down i.e. -width or +width 
 // however pacman cannot move through walls 
+//if pacman goes out of the grid from the left it should enter from the right and vice versa
 function movePacman(e) {
      let key = e.keyCode
      
@@ -96,6 +97,12 @@ function movePacman(e) {
         square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition-1].style.transform= 'rotate(180deg)'
          pacmanCurrentPosition -=1;
+         }
+
+         if (pacmanCurrentPosition === 364) {
+            square[pacmanCurrentPosition].classList.remove('pacman')
+            pacmanCurrentPosition += 27
+
          }
      }
      else if (key === 38) {
@@ -109,6 +116,10 @@ function movePacman(e) {
          if(square[pacmanCurrentPosition+1].classList.contains('wall')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
         pacmanCurrentPosition += 1;
+         }
+         if(pacmanCurrentPosition=== 391) {
+            square[pacmanCurrentPosition].classList.remove('pacman')
+            pacmanCurrentPosition -= 27
          }
      }
 
