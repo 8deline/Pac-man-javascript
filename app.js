@@ -90,24 +90,34 @@ let width = 28;
 // however pacman cannot move through walls 
 function movePacman(e) {
      let key = e.keyCode
-     square[pacmanCurrentPosition].classList.remove('pacman')
+     
      if (key ===37) {
+         if(square[pacmanCurrentPosition-1].classList.contains('wall')===false){
+        square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition-1].style.transform= 'rotate(180deg)'
          pacmanCurrentPosition -=1;
+         }
      }
      else if (key === 38) {
+         if(square[pacmanCurrentPosition-width].classList.contains('wall')=== false){
+        square[pacmanCurrentPosition].classList.remove('pacman')
         square[pacmanCurrentPosition-width].style.transform= 'rotate(-90deg)'
         pacmanCurrentPosition -= width;
-
+         }
      }
      else if (key === 39) {
+         if(square[pacmanCurrentPosition+1].classList.contains('wall')===false){
+        square[pacmanCurrentPosition].classList.remove('pacman')
         pacmanCurrentPosition += 1;
-
+         }
      }
 
      else if (key ===40) {
+         if(square[pacmanCurrentPosition+width].classList.contains('wall')===false){
+        square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition+width].style.transform = 'rotate(90deg)'
         pacmanCurrentPosition += width;
+         }
      }
      square[pacmanCurrentPosition].classList.add('pacman')
      square[pacmanCurrentPosition].classList.remove('pac-dots')
