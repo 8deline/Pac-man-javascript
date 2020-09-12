@@ -44,3 +44,16 @@ body {
     border: 5px solid black
 }
 
+.pacman {
+    background-color: yellow;
+    box-sizing: border-box;
+    border-radius: 50%;
+    position: relative;
+}
+
+.mouth {
+    background: black;
+    position: absolute;
+    clip-path: polygon(100% 74%, 44% 48%, 100% 21%);
+}
+

@@ -10,9 +10,9 @@ Legend
 const gridArray = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
-    1,0,1,1,1,0,0,1,1,1,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,0,1,
-    1,3,1,1,1,0,0,1,1,1,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,3,1,
-    1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,0,1,
+    1,0,1,1,1,1,1,1,0,0,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,0,1,
+    1,3,1,1,1,1,1,1,0,0,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,3,1,
+    1,0,1,1,1,1,1,1,0,0,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,0,1,
     1,0,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
     1,0,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,
     1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,
@@ -71,7 +71,50 @@ for (let i=0; i<gridArray.length; i++){
 
     }
     grid.append(square[i])
+
 }
+// we let pacman begin in this particular grid index
+let pacmanCurrentPosition = 434;
+square[pacmanCurrentPosition].classList.add('pacman')
+let mouth = document.createElement('div')
+square[pacmanCurrentPosition].append(mouth)
+mouth.classList.add('mouth');
+
+//the width of the grid
+let width = 28;
+
+// We will create a function to let pacman move and eat the pacdots
+//when pacman moves - we need to delete class of pacman from current div, add class of pacman to the other div and remove class of pacdots
+//pacman can move left and right i.e. -1 or +1 step
+//pacman can move up and down i.e. -width or +width 
+// however pacman cannot move through walls 
+function movePacman(e) {
+     let key = e.keyCode
+     square[pacmanCurrentPosition].classList.remove('pacman')
+     if (key ===37) {
+         square[pacmanCurrentPosition-1].style.transform= 'rotate(180deg)'
+         pacmanCurrentPosition -=1;
+     }
+     else if (key === 38) {
+        square[pacmanCurrentPosition-width].style.transform= 'rotate(-90deg)'
+        pacmanCurrentPosition -= width;
+
+     }
+     else if (key === 39) {
+        pacmanCurrentPosition += 1;
+
+     }
+
+     else if (key ===40) {
+         square[pacmanCurrentPosition+width].style.transform = 'rotate(90deg)'
+        pacmanCurrentPosition += width;
+     }
+     square[pacmanCurrentPosition].classList.add('pacman')
+     square[pacmanCurrentPosition].classList.remove('pac-dots')
+     square[pacmanCurrentPosition].append(mouth)
+    mouth.classList.add('mouth');
+    }
+
+    document.addEventListener('keydown',movePacman);
 
 
- 
