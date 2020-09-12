@@ -3,7 +3,7 @@ body {
     background-color: black;
 }
 
-#score {
+#display, #score {
     font-family: 'Ranchers', cursive;
     color: yellow;
     text-align: center;

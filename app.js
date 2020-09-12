@@ -7,6 +7,9 @@ Legend
 4: empty space
 */
 
+let score = 0;
+let currentScore = document.getElementById('score')
+
 const gridArray = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
@@ -131,11 +134,28 @@ function movePacman(e) {
          }
      }
      square[pacmanCurrentPosition].classList.add('pacman')
-     square[pacmanCurrentPosition].classList.remove('pac-dots')
      square[pacmanCurrentPosition].append(mouth)
-    mouth.classList.add('mouth');
+     mouth.classList.add('mouth');
+     scoreCount();
+     square[pacmanCurrentPosition].classList.remove('pac-dots')
+    
+ 
+    
+    }
+    document.addEventListener('keydown',movePacman);
+
+    scoreCount();
+
+    function scoreCount(){
+        if (square[pacmanCurrentPosition].classList.contains('pac-dots')) {
+            score +=1;
+        }
+        else if (square[pacmanCurrentPosition].classList.contains('power-pellets')){
+            score +=10;
+        }
+        currentScore.innerHTML = score;
     }
 
-    document.addEventListener('keydown',movePacman);
+
 
 
