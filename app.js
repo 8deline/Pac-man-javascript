@@ -96,7 +96,7 @@ function movePacman(e) {
      let key = e.keyCode
      
      if (key ===37) {
-         if(square[pacmanCurrentPosition-1].classList.contains('wall')===false){
+         if(square[pacmanCurrentPosition-1].classList.contains('wall')===false && square[pacmanCurrentPosition-1].classList.contains('ghost-lair')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition-1].style.transform= 'rotate(180deg)'
          pacmanCurrentPosition -=1;
@@ -109,14 +109,14 @@ function movePacman(e) {
          }
      }
      else if (key === 38) {
-         if(square[pacmanCurrentPosition-width].classList.contains('wall')=== false){
+         if(square[pacmanCurrentPosition-width].classList.contains('wall')=== false && square[pacmanCurrentPosition-width].classList.contains('ghost-lair')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
         square[pacmanCurrentPosition-width].style.transform= 'rotate(-90deg)'
         pacmanCurrentPosition -= width;
          }
      }
      else if (key === 39) {
-         if(square[pacmanCurrentPosition+1].classList.contains('wall')===false){
+         if(square[pacmanCurrentPosition+1].classList.contains('wall')===false && square[pacmanCurrentPosition+1].classList.contains('ghost-lair')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
         pacmanCurrentPosition += 1;
          }
@@ -127,31 +127,26 @@ function movePacman(e) {
      }
 
      else if (key ===40) {
-         if(square[pacmanCurrentPosition+width].classList.contains('wall')===false){
+         if(square[pacmanCurrentPosition+width].classList.contains('wall')===false && square[pacmanCurrentPosition+width].classList.contains('ghost-lair')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition+width].style.transform = 'rotate(90deg)'
         pacmanCurrentPosition += width;
          }
      }
+     eatPowerPellets();
      square[pacmanCurrentPosition].classList.add('pacman')
      square[pacmanCurrentPosition].append(mouth)
      mouth.classList.add('mouth');
      scoreCount();
      square[pacmanCurrentPosition].classList.remove('pac-dots')
-    
- 
-    
+     
     }
     document.addEventListener('keydown',movePacman);
 
-    scoreCount();
 
     function scoreCount(){
         if (square[pacmanCurrentPosition].classList.contains('pac-dots')) {
             score +=1;
-        }
-        else if (square[pacmanCurrentPosition].classList.contains('power-pellets')){
-            score +=10;
         }
         currentScore.innerHTML = score;
     }
@@ -170,14 +165,36 @@ function movePacman(e) {
             direction = directions[Math.floor(Math.random()*directions.length)]
             let ghostDestination = ghostCurrentPosition + direction
             if(square[ghostDestination].classList.contains('wall')===false && ghostDestination !== 364 && ghostDestination !== 391) {
-                square[ghostCurrentPosition].classList.remove('ghost')
+                square[ghostCurrentPosition].classList.remove('ghost','blueGhost')
                 square[ghostDestination].classList.add('ghost');
                 ghostCurrentPosition += direction
+                if (ghostObject.isBlue) {
+                    square[ghostDestination].classList.add('blueGhost')
+
+                }
                 
-            }
+            }   
         }, 500);
     }
 moveGhost();
+
+
+/* when pacman eats the power pellets, the powerpellets need to be removed, and the ghost will turn blue for
+5s before turning back to its original colour */ 
+function eatPowerPellets() {
+    if (square[pacmanCurrentPosition].classList.contains('power-pellets')) {
+        score += 10;
+        score.innerText = score;
+        square[pacmanCurrentPosition].classList.remove('power-pellets')
+        ghostObject.isBlue = true
+        setTimeout(function(){
+            ghostObject.isBlue = false
+        },5000)
+    }
+}
+
+
+
 
     
     

@@ -71,7 +71,7 @@ we do a flex-wrap wrap because we want all the grids to be laid out in different
 .blueGhost {
     border: 0;
     box-sizing: border-box;
-    background-color; blue;
+    background-color: blue;
     border-radius: 100% 100% 0 0;
   height: 10px;
   width: 10px;
