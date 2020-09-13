@@ -83,8 +83,17 @@ let mouth = document.createElement('div')
 square[pacmanCurrentPosition].append(mouth)
 mouth.classList.add('mouth');
 
+
+// Ghost curent position
+let ghostCurrentPosition = 322  
+    square[ghostCurrentPosition].classList.add('ghost');
+
+    let ghostObject = {isBlue : false}
+
 //the width of the grid
 let width = 28;
+//the directions that pacman and ghost can go 
+const directions = [-1, 1, -width, width]
 
 // We will create a function to let pacman move and eat the pacdots
 //when pacman moves - we need to delete class of pacman from current div, add class of pacman to the other div and remove class of pacdots
@@ -96,7 +105,7 @@ function movePacman(e) {
      let key = e.keyCode
      
      if (key ===37) {
-         if(square[pacmanCurrentPosition-1].classList.contains('wall')===false && square[pacmanCurrentPosition-1].classList.contains('ghost-lair')===false){
+         if(square[pacmanCurrentPosition-1].classList.contains('wall')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition-1].style.transform= 'rotate(180deg)'
          pacmanCurrentPosition -=1;
@@ -109,14 +118,14 @@ function movePacman(e) {
          }
      }
      else if (key === 38) {
-         if(square[pacmanCurrentPosition-width].classList.contains('wall')=== false && square[pacmanCurrentPosition-width].classList.contains('ghost-lair')===false){
+         if(square[pacmanCurrentPosition-width].classList.contains('wall')=== false){
         square[pacmanCurrentPosition].classList.remove('pacman')
         square[pacmanCurrentPosition-width].style.transform= 'rotate(-90deg)'
         pacmanCurrentPosition -= width;
          }
      }
      else if (key === 39) {
-         if(square[pacmanCurrentPosition+1].classList.contains('wall')===false && square[pacmanCurrentPosition+1].classList.contains('ghost-lair')===false){
+         if(square[pacmanCurrentPosition+1].classList.contains('wall')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
         pacmanCurrentPosition += 1;
          }
@@ -127,13 +136,15 @@ function movePacman(e) {
      }
 
      else if (key ===40) {
-         if(square[pacmanCurrentPosition+width].classList.contains('wall')===false && square[pacmanCurrentPosition+width].classList.contains('ghost-lair')===false){
+         if(square[pacmanCurrentPosition+width].classList.contains('wall')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition+width].style.transform = 'rotate(90deg)'
         pacmanCurrentPosition += width;
          }
      }
      eatPowerPellets();
+     checkWin();
+     eatGhost();
      square[pacmanCurrentPosition].classList.add('pacman')
      square[pacmanCurrentPosition].append(mouth)
      mouth.classList.add('mouth');
@@ -151,32 +162,35 @@ function movePacman(e) {
         currentScore.innerHTML = score;
     }
 
-    let ghostCurrentPosition = 322  
-    square[ghostCurrentPosition].classList.add('ghost');
-
-    let ghostObject = {isBlue : false}
+    
     // create a function for ghost to move - the ghost can move left, right (-1 , 1) and top, down (-width, width)
     // create a ghost that moves at random
     // ghost needs to 'decide' where to move first - but the destination cannot be a wall and the ghost should not exit the grid
     // if the ghost can move, remove ghost class from current position and add ghost class in the next square
-    function moveGhost() {
-        const directions = [-1, 1, -width, width]
-        setInterval(function(){
-            direction = directions[Math.floor(Math.random()*directions.length)]
-            let ghostDestination = ghostCurrentPosition + direction
-            if(square[ghostDestination].classList.contains('wall')===false && ghostDestination !== 364 && ghostDestination !== 391) {
-                square[ghostCurrentPosition].classList.remove('ghost','blueGhost')
-                square[ghostDestination].classList.add('ghost');
-                ghostCurrentPosition += direction
-                if (ghostObject.isBlue) {
-                    square[ghostDestination].classList.add('blueGhost')
 
-                }
-                
-            }   
-        }, 500);
-    }
-moveGhost();
+        let ghostMoving = setInterval(function(){
+            direction = directions[Math.floor(Math.random()*directions.length)]
+           let ghostDestination = ghostCurrentPosition + direction
+           if(square[ghostDestination].classList.contains('wall')===false && ghostDestination !== 364 && ghostDestination !== 391) {
+               square[ghostCurrentPosition].classList.remove('ghost','blueGhost')
+               square[ghostDestination].classList.add('ghost');
+               ghostCurrentPosition += direction
+               if (ghostObject.isBlue) {
+                   square[ghostDestination].classList.add('blueGhost')
+                   if (square[ghostDestination].classList.contains('pacman')) {
+                    //    score += 100;
+                    //    currentScore.innerHTML = score;
+                       //square[ghostDestination].classList.removes('blueGhost')
+                   }
+    
+    
+               }
+               
+           }   
+       }, 500);
+        
+
+
 
 
 /* when pacman eats the power pellets, the powerpellets need to be removed, and the ghost will turn blue for
@@ -189,10 +203,27 @@ function eatPowerPellets() {
         ghostObject.isBlue = true
         setTimeout(function(){
             ghostObject.isBlue = false
-        },5000)
+        },14000)
     }
 }
 
+/*When the ghost turn blue pacman can eat the ghost and score points */
+
+function eatGhost() {
+    if (square[pacmanCurrentPosition].classList.contains('blueGhost')){
+        score += 100;
+        score.innerHTML = score
+        square[pacmanCurrentPosition].classList.remove('blueGhost','ghost')
+        clearInterval(ghostMoving)
+    }
+}
+
+function checkWin() {
+    if (score === 282 || square[pacmanCurrentPosition].classList.contains('blueGhost')){
+        alert('You won!')
+        document.location.reload()
+    }
+}
 
 
 
