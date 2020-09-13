@@ -76,6 +76,7 @@ for (let i=0; i<gridArray.length; i++){
     grid.append(square[i])
 
 }
+
 // we let pacman begin in this particular grid index
 let pacmanCurrentPosition = 434;
 square[pacmanCurrentPosition].classList.add('pacman')
@@ -85,10 +86,10 @@ mouth.classList.add('mouth');
 
 
 // Ghost curent position
-let ghostCurrentPosition = 322  
-    square[ghostCurrentPosition].classList.add('ghost');
+let ghostCurrentPosition = 322;  
+square[ghostCurrentPosition].classList.add('ghost');
 
-    let ghostObject = {isBlue : false}
+let ghostObject = {isBlue: false};
 
 //the width of the grid
 let width = 28;
@@ -104,7 +105,7 @@ const directions = [-1, 1, -width, width]
 function movePacman(e) {
      let key = e.keyCode
      
-     if (key ===37) {
+     if (key === 37) {
          if(square[pacmanCurrentPosition-1].classList.contains('wall')===false){
         square[pacmanCurrentPosition].classList.remove('pacman')
          square[pacmanCurrentPosition-1].style.transform= 'rotate(180deg)'
@@ -145,12 +146,13 @@ function movePacman(e) {
      eatPowerPellets();
      checkWin();
      eatGhost();
+     gameOver();
      square[pacmanCurrentPosition].classList.add('pacman')
      square[pacmanCurrentPosition].append(mouth)
      mouth.classList.add('mouth');
      scoreCount();
      square[pacmanCurrentPosition].classList.remove('pac-dots')
-     
+    
     }
     document.addEventListener('keydown',movePacman);
 
@@ -222,6 +224,14 @@ function checkWin() {
     if (score === 282 || square[pacmanCurrentPosition].classList.contains('blueGhost')){
         alert('You won!')
         document.location.reload()
+    }
+}
+
+function gameOver() {
+    if (square[pacmanCurrentPosition].classList.contains('ghost') && !ghostObject.isBlue){
+        clearInterval(ghostMoving);
+        alert('GAME OVER!')
+        document.location.reload();
     }
 }
 
