@@ -156,6 +156,36 @@ function movePacman(e) {
         currentScore.innerHTML = score;
     }
 
+    let ghostCurrentPosition = 322  
+    square[ghostCurrentPosition].classList.add('ghost');
+
+    let ghostObject = {isBlue : false}
+    // create a function for ghost to move - the ghost can move left, right (-1 , 1) and top, down (-width, width)
+    // create a ghost that moves at random
+    // ghost needs to 'decide' where to move first - but the destination cannot be a wall and the ghost should not exit the grid
+    // if the ghost can move, remove ghost class from current position and add ghost class in the next square
+    function moveGhost() {
+        const directions = [-1, 1, -width, width]
+        setInterval(function(){
+            direction = directions[Math.floor(Math.random()*directions.length)]
+            let ghostDestination = ghostCurrentPosition + direction
+            if(square[ghostDestination].classList.contains('wall')===false && ghostDestination !== 364 && ghostDestination !== 391) {
+                square[ghostCurrentPosition].classList.remove('ghost')
+                square[ghostDestination].classList.add('ghost');
+                ghostCurrentPosition += direction
+                
+            }
+        }, 500);
+    }
+moveGhost();
+
+    
+    
+
+
+
+
+
 
 
 
