@@ -1,3 +1,12 @@
+//start the game 
+
+let startGame = document.querySelector('#start')
+let startOverlay = document.querySelector('#overlay')
+startGame.addEventListener("click", function(){
+startOverlay.style.display = 'none'
+})
+
+
 /* Grid architecture
 Legend
 0: pac dots
@@ -222,16 +231,21 @@ function eatGhost() {
 
 function checkWin() {
     if (score === 282 || square[pacmanCurrentPosition].classList.contains('blueGhost')){
-        alert('You won!')
-        document.location.reload()
+        let winoverlay = document.getElementById('overlay-win')
+        winoverlay.style.display = 'block';
+        document.addEventListener('keydown', function(){
+            document.location.reload()
+        })
+        
     }
 }
 
 function gameOver() {
     if (square[pacmanCurrentPosition].classList.contains('ghost') && !ghostObject.isBlue){
+        square[pacmanCurrentPosition].classList.remove('pacman');
         clearInterval(ghostMoving);
         alert('GAME OVER!')
-        document.location.reload();
+        document.location.reload()
     }
 }
 
