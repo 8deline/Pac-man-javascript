@@ -244,8 +244,26 @@ function gameOver() {
     if (square[pacmanCurrentPosition].classList.contains('ghost') && !ghostObject.isBlue){
         square[pacmanCurrentPosition].classList.remove('pacman');
         clearInterval(ghostMoving);
-        alert('GAME OVER!')
-        document.location.reload()
+        let loseGame = document.querySelector('#overlay-lose')
+        let replay = document.querySelector('#replay-button')
+        let home = document.querySelector('#home-button')
+        loseGame.style.display = 'block'
+        home.addEventListener('click', function() {
+            document.location.reload()
+        })
+
+        replay.addEventListener('click',function(){
+            loseGame.style.display= 'none';
+            document.location.reload();
+            body.remove(startOverlay);
+            
+            
+            
+        
+        })
+
+        // alert('GAME OVER!'
+        // 
     }
 }
 
