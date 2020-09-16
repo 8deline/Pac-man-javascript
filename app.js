@@ -2,10 +2,21 @@
 
 let startGame = document.querySelector('#start')
 let startOverlay = document.querySelector('#overlay')
-startGame.addEventListener("click", function(){
-startOverlay.style.display = 'none'
-})
+let currentScore = document.getElementById('score')
+let winoverlay = document.getElementById('overlay-win')
+let loseGame = document.querySelector('#overlay-lose')
+let replay = document.querySelector('#replay-button')
+let home = document.querySelector('#home-button')
 
+//the width of the grid
+let width = 28;
+//the directions that pacman and ghost can go  left right or up down ,i.e. 1 entire width
+const directions = [-1, 1, -width, width]
+
+// creating an div container for the game grid
+let grid = document.createElement('div')
+grid.setAttribute('class','grid')
+document.body.append(grid);
 
 /* Grid architecture
 Legend
@@ -15,9 +26,6 @@ Legend
 3: power pellets
 4: empty space
 */
-
-let score = 0;
-let currentScore = document.getElementById('score')
 
 const gridArray = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -50,60 +58,109 @@ const gridArray = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ]
 
-let grid = document.createElement('div')
-grid.setAttribute('class','grid')
-document.body.append(grid);
 
-/* Create an array to contain all 784 divs elements on the grid
-depending on the legend, the div will be given their corresponding div classes
-*/
 let square = [];
-
-for (let i=0; i<gridArray.length; i++){
-    square.push(document.createElement('div'))
-    switch(gridArray[i])
-    {case 0: 
-        square[i].className += " pac-dots"
-        
-        break
-    case 1:
-        square[i].className +=" wall"
-        break
-
-    case 2:
-        square[i].className +=" ghost-lair"
-        break
-
-    case 3:
-        square[i].className +=" power-pellets"
-        break
-
-    default:
-        square[i].className += " empty"
-
-    }
-    grid.append(square[i])
-
-}
-
-// we let pacman begin in this particular grid index
-let pacmanCurrentPosition = 434;
-square[pacmanCurrentPosition].classList.add('pacman')
+let score = 0;
+let pacmanCurrentPosition = 0;
+let ghostCurrentPosition = 0;  
+//pacman's mouth
 let mouth = document.createElement('div')
-square[pacmanCurrentPosition].append(mouth)
-mouth.classList.add('mouth');
 
 
-// Ghost curent position
-let ghostCurrentPosition = 322;  
-square[ghostCurrentPosition].classList.add('ghost');
-
+// determine if the ghost is blue or not
 let ghostObject = {isBlue: false};
 
-//the width of the grid
-let width = 28;
-//the directions that pacman and ghost can go 
-const directions = [-1, 1, -width, width]
+//determine if the user has pressed start
+let gameProgress = {gameInProgress: false}
+
+
+
+//create a function to initialise the game
+function gameStart() {
+    /* Create an array to contain all 784 divs elements on the grid
+depending on the legend, the div will be given their corresponding div classes
+*/
+    score = 0;
+    currentScore.innerText = score;
+
+    for (let i=0; i<gridArray.length; i++){
+        square.push(document.createElement('div'))
+        switch(gridArray[i])
+        {case 0: 
+            square[i].className += " pac-dots"
+            
+            break
+        case 1:
+            square[i].className +=" wall"
+            break
+
+        case 2:
+            square[i].className +=" ghost-lair"
+            break
+
+        case 3:
+            square[i].className +=" power-pellets"
+            break
+
+        default:
+            square[i].className += " empty"
+
+        }
+        grid.append(square[i])
+
+    }
+
+    // we let pacman begin in this particular grid index
+    pacmanCurrentPosition = 434;
+    square[pacmanCurrentPosition].classList.add('pacman')
+    square[pacmanCurrentPosition].append(mouth)
+    mouth.classList.add('mouth');
+
+    // Ghost curent position
+    ghostCurrentPosition = 322;  
+    square[ghostCurrentPosition].classList.add('ghost');
+    gameProgress.gameInProgress = true;
+   
+}
+//ghostMoving function is called
+ghostMoving();
+
+startGame.addEventListener("click", function() {
+    startOverlay.style.display = 'none'
+    gameStart();
+});
+
+
+    // create a function for ghost to move - the ghost can move left, right (-1 , 1) and top, down (-width, width)
+    // create a ghost that moves at random
+    // ghost needs to 'decide' where to move first - but the destination cannot be a wall and the ghost should not exit the grid
+    // if the ghost can move, remove ghost class from current position and add ghost class in the next square
+    //ghost should only move after the user press start
+function ghostMoving() {
+    if (gameProgress.gameInProgress = true) {
+        setInterval( function() {
+            let direction = directions[Math.floor(Math.random()*directions.length)]
+            let ghostDestination = ghostCurrentPosition + direction
+            if(square[ghostDestination].classList.contains('wall')===false && ghostDestination !== 364 && ghostDestination !== 391) {
+                square[ghostCurrentPosition].classList.remove('ghost','blueGhost')
+                square[ghostDestination].classList.add('ghost');
+                ghostCurrentPosition += direction
+                if (ghostObject.isBlue) {
+                    square[ghostDestination].classList.add('blueGhost')
+                }
+                
+            }   
+        }, 500)
+    }   
+}
+
+
+
+
+
+
+
+
 
 // We will create a function to let pacman move and eat the pacdots
 //when pacman moves - we need to delete class of pacman from current div, add class of pacman to the other div and remove class of pacdots
@@ -163,9 +220,12 @@ function movePacman(e) {
      square[pacmanCurrentPosition].classList.remove('pac-dots')
     
     }
-    document.addEventListener('keydown',movePacman);
 
+    document.addEventListener('keydown', movePacman);
+    
 
+    
+// create a function to trace the score as pacman eats pacdots
     function scoreCount(){
         if (square[pacmanCurrentPosition].classList.contains('pac-dots')) {
             score +=1;
@@ -173,39 +233,10 @@ function movePacman(e) {
         currentScore.innerHTML = score;
     }
 
+
     
-    // create a function for ghost to move - the ghost can move left, right (-1 , 1) and top, down (-width, width)
-    // create a ghost that moves at random
-    // ghost needs to 'decide' where to move first - but the destination cannot be a wall and the ghost should not exit the grid
-    // if the ghost can move, remove ghost class from current position and add ghost class in the next square
-
-        let ghostMoving = setInterval(function(){
-            direction = directions[Math.floor(Math.random()*directions.length)]
-           let ghostDestination = ghostCurrentPosition + direction
-           if(square[ghostDestination].classList.contains('wall')===false && ghostDestination !== 364 && ghostDestination !== 391) {
-               square[ghostCurrentPosition].classList.remove('ghost','blueGhost')
-               square[ghostDestination].classList.add('ghost');
-               ghostCurrentPosition += direction
-               if (ghostObject.isBlue) {
-                   square[ghostDestination].classList.add('blueGhost')
-                   if (square[ghostDestination].classList.contains('pacman')) {
-                    //    score += 100;
-                    //    currentScore.innerHTML = score;
-                       //square[ghostDestination].classList.removes('blueGhost')
-                   }
-    
-    
-               }
-               
-           }   
-       }, 500);
-        
-
-
-
-
 /* when pacman eats the power pellets, the powerpellets need to be removed, and the ghost will turn blue for
-5s before turning back to its original colour */ 
+14s before turning back to its original colour */ 
 function eatPowerPellets() {
     if (square[pacmanCurrentPosition].classList.contains('power-pellets')) {
         score += 10;
@@ -229,9 +260,10 @@ function eatGhost() {
     }
 }
 
+// the player wins when he got all the pacdots and powerpellets || when he eats the blue ghost
 function checkWin() {
     if (score === 282 || square[pacmanCurrentPosition].classList.contains('blueGhost')){
-        let winoverlay = document.getElementById('overlay-win')
+        
         winoverlay.style.display = 'block';
         document.addEventListener('keydown', function(){
             document.location.reload()
@@ -240,13 +272,13 @@ function checkWin() {
     }
 }
 
+// gameOVer when pacman is in the same div square as the ghost is not blue, player can choose to replay (which will reset the game)
+//or go back to home page
 function gameOver() {
     if (square[pacmanCurrentPosition].classList.contains('ghost') && !ghostObject.isBlue){
         square[pacmanCurrentPosition].classList.remove('pacman');
         clearInterval(ghostMoving);
-        let loseGame = document.querySelector('#overlay-lose')
-        let replay = document.querySelector('#replay-button')
-        let home = document.querySelector('#home-button')
+        
         loseGame.style.display = 'block'
         home.addEventListener('click', function() {
             document.location.reload()
@@ -254,16 +286,10 @@ function gameOver() {
 
         replay.addEventListener('click',function(){
             loseGame.style.display= 'none';
-            document.location.reload();
-            body.remove(startOverlay);
-            
-            
-            
-        
+            square[pacmanCurrentPosition].classList.remove('pacman');
+            square[ghostCurrentPosition].classList.remove('ghost')
+            gameStart()
         })
-
-        // alert('GAME OVER!'
-        // 
     }
 }
 
