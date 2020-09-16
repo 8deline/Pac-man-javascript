@@ -31,10 +31,11 @@ Player presses the up, down, left, right arrow keys to move Pac-Man on the grid.
  3. There might be a delay for the ghost to turn blue after Pac-Man eats a power-pellet
  
  ### Possible improvements
- 1.  Implement a search algorithm for the ghost to move closer to Pac-Man
- 2. Create more ghosts
- 3. Create more levels of increasing difficulty
- 4. Create a story narration with maps which our protagonist can move around and advance through the levels 
+ 1.  Give the ghost eyes and ghost tails
+ 2.  Implement a search algorithm for the ghost to move closer to Pac-Man
+ 3. Create more ghosts
+ 4. Create more levels of increasing difficulty
+ 5. Create a story narration with maps which our protagonist can move around and advance through the levels 
  
  
  
